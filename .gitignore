@@ -6,6 +6,10 @@ venv/
 .venv/
 env/
 .env/
+venv_idl3_dda/
+
+# Credentials
+.env
 
 # Streamlit
 .streamlit/

@@ -2,9 +2,13 @@ import os
 from supabase import create_client, Client
 from models.libro import Libro
 
-# Reemplaza con tus credenciales de Supabase
-SUPABASE_URL = "https://tu-proyecto.supabase.co"
-SUPABASE_KEY = "tu-anon-key"
+from dotenv import load_dotenv
+
+# Cargar variables de entorno desde .env
+load_dotenv()
+
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 
 class LibroService:
     @staticmethod
