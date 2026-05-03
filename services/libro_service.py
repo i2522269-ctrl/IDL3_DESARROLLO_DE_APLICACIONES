@@ -9,7 +9,9 @@ load_dotenv()
 class LibroService:
     @staticmethod
     def get_connection():
-        return psycopg2.connect(os.getenv("DATABASE_URL"))
+        # Soporte para local (.env) y Streamlit Cloud (Secrets)
+        db_url = os.getenv("DATABASE_URL")
+        return psycopg2.connect(db_url)
 
     @staticmethod
     def listar_libros():
@@ -44,6 +46,24 @@ class LibroService:
         cur.execute(query, (
             libro.sku, libro.titulo, libro.autor, 
             libro.precio_costo, libro.precio_venta, libro.stock
+        ))
+        conn.commit()
+        cur.close()
+        conn.close()
+
+    @staticmethod
+    def actualizar_libro(id_libro, libro: Libro):
+        conn = LibroService.get_connection()
+        cur = conn.cursor()
+        query = """
+            UPDATE libros 
+            SET sku=%s, titulo=%s, autor=%s, precio_costo=%s, precio_venta=%s, stock=%s
+            WHERE id = %s
+        """
+        cur.execute(query, (
+            libro.sku, libro.titulo, libro.autor, 
+            libro.precio_costo, libro.precio_venta, libro.stock,
+            id_libro
         ))
         conn.commit()
         cur.close()
