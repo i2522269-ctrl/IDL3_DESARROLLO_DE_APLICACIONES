@@ -7,38 +7,23 @@ class Libro:
         self.__precio_venta = precio_venta
         self.__stock = stock
 
-    # Getters
     @property
-    def id(self):
-        return self.__id
-
+    def id(self): return self.__id
     @property
-    def titulo(self):
-        return self.__titulo
-
+    def titulo(self): return self.__titulo
     @property
-    def autor(self):
-        return self.__autor
-
+    def autor(self): return self.__autor
     @property
-    def precio_costo(self):
-        return self.__precio_costo
-
+    def precio_costo(self): return self.__precio_costo
     @property
-    def precio_venta(self):
-        return self.__precio_venta
-
+    def precio_venta(self): return self.__precio_venta
     @property
-    def stock(self):
-        return self.__stock
+    def stock(self): return self.__stock
 
-    # Setters (ejemplo para stock)
     @stock.setter
     def stock(self, nuevo_stock):
-        if nuevo_stock >= 0:
-            self.__stock = nuevo_stock
+        if nuevo_stock >= 0: self.__stock = nuevo_stock
 
-    # Lógica de costos básica
     def calcular_margen(self):
         return self.__precio_venta - self.__precio_costo
 

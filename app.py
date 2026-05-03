@@ -56,7 +56,6 @@ with col_list:
     libros = LibroService.listar_libros()
     
     if libros:
-        # Convertir objetos a DataFrame para mostrar en tabla
         data = []
         for l in libros:
             data.append({
