@@ -1,16 +1,3 @@
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-venv/
-.venv/
-env/
-.env/
-bin/
-lib/
-share/
-Include/
-
 # IDEs
 .vscode/
 .idea/
@@ -18,3 +5,9 @@ Include/
 # OS
 Thumbs.db
 Desktop.ini
+
+# PHP / Web
+*.log
+vendor/
+node_modules/
+.env
