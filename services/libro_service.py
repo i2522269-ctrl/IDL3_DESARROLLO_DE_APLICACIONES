@@ -1,52 +1,68 @@
 import os
-from supabase import create_client, Client
+import psycopg2
+from psycopg2.extras import RealDictCursor
 from models.libro import Libro
-
 from dotenv import load_dotenv
 
-# Cargar variables de entorno desde .env
 load_dotenv()
 
-SUPABASE_URL = os.getenv("SUPABASE_URL")
-SUPABASE_KEY = os.getenv("SUPABASE_KEY")
-    
 class LibroService:
     @staticmethod
-    def get_client() -> Client:
-        return create_client(SUPABASE_URL, SUPABASE_KEY)
+    def get_connection():
+        return psycopg2.connect(os.getenv("DATABASE_URL"))
 
     @staticmethod
     def listar_libros():
-        supabase = LibroService.get_client()
-        response = supabase.table("libros").select("*").execute()
+        conn = LibroService.get_connection()
+        cur = conn.cursor(cursor_factory=RealDictCursor)
+        cur.execute("SELECT * FROM libros ORDER BY created_at DESC")
+        rows = cur.fetchall()
+        cur.close()
+        conn.close()
         
         libros = []
-        for item in response.data:
+        for row in rows:
             libros.append(Libro(
-                id=item['id'],
-                sku=item.get('sku'),
-                titulo=item['titulo'],
-                autor=item['autor'],
-                precio_costo=float(item.get('precio_costo', 0)),
-                precio_venta=float(item.get('precio_venta', 0)),
-                stock=int(item.get('stock', 0))
+                id=row['id'],
+                sku=row.get('sku'),
+                titulo=row['titulo'],
+                autor=row['autor'],
+                precio_costo=float(row.get('precio_costo', 0)),
+                precio_venta=float(row.get('precio_venta', 0)),
+                stock=int(row.get('stock', 0))
             ))
         return libros
 
     @staticmethod
     def registrar_libro(libro: Libro):
-        supabase = LibroService.get_client()
-        data = {
-            "sku": libro.sku,
-            "titulo": libro.titulo,
-            "autor": libro.autor,
-            "precio_costo": libro.precio_costo,
-            "precio_venta": libro.precio_venta,
-            "stock": libro.stock
-        }
-        return supabase.table("libros").insert(data).execute()
+        conn = LibroService.get_connection()
+        cur = conn.cursor()
+        query = """
+            INSERT INTO libros (sku, titulo, autor, precio_costo, precio_venta, stock)
+            VALUES (%s, %s, %s, %s, %s, %s)
+        """
+        cur.execute(query, (
+            libro.sku, libro.titulo, libro.autor, 
+            libro.precio_costo, libro.precio_venta, libro.stock
+        ))
+        conn.commit()
+        cur.close()
+        conn.close()
 
     @staticmethod
     def eliminar_libro(libro_id):
-        supabase = LibroService.get_client()
-        return supabase.table("libros").delete().eq("id", libro_id).execute()
+        conn = LibroService.get_connection()
+        cur = conn.cursor()
+        cur.execute("DELETE FROM libros WHERE id = %s", (libro_id,))
+        conn.commit()
+        cur.close()
+        conn.close()
+
+    @staticmethod
+    def eliminar_libro_por_sku(sku):
+        conn = LibroService.get_connection()
+        cur = conn.cursor()
+        cur.execute("DELETE FROM libros WHERE sku = %s", (sku,))
+        conn.commit()
+        cur.close()
+        conn.close()
