@@ -43,5 +43,5 @@ try:
     mostrar_analisis_inventario(libros_db)
     mostrar_tabla_libros(libros_db)
 except Exception as e:
-    st.error("No se pudo conectar con Supabase. Verifica tus credenciales en 'services/libro_service.py'")
-    st.info("Nota: Asegúrate de tener la tabla 'libros' creada en Supabase.")
+    st.error(f"Error de conexión: {e}")
+    st.info("Asegúrate de haber reiniciado Streamlit después de configurar el archivo .env y que la tabla 'libros' exista.")
