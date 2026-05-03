@@ -25,6 +25,18 @@
 </nav>
 
 <div class="container">
+    <?php if(isset($_GET['msg'])): ?>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i>
+            <?php 
+                if($_GET['msg'] == 'creado') echo "¡Libro registrado con éxito!";
+                if($_GET['msg'] == 'actualizado') echo "¡Libro actualizado correctamente!";
+                if($_GET['msg'] == 'eliminado') echo "¡Libro eliminado del inventario!";
+            ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    <?php endif; ?>
+
     <div class="row mb-3">
         <div class="col-md-6">
             <h3><i class="fas fa-list me-2"></i>Inventario de Libros</h3>
